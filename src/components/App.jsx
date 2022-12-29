@@ -1,26 +1,41 @@
 import Header from './Header' ;
 import Footer from './Footer' ;
 import Note from './Note' ;
-import notes from '../notes' ;
-
-function createNote(note){
-  return(
-    <Note key={note.key} title={note.title} content={note.content} />
-  );
-}
-
-console.log(notes);
-
-var arr = [1,2,3];
-
-console.log(arr);
+import CreateArea from './CreateArea';
+import React from "react" ;
 
 
 function App() {
+  const [notes, setNotes] = React.useState([]);
+
+  function updateNotes(note){
+    setNotes((previous) => {
+      note = {...note, key : previous.length+1};
+      console.log(note);
+      return [...previous,note];
+    });
+  }
+
+  function deleteNote(id){
+    setNotes((previous) => {
+      const newNotes =  previous.filter((val, index) => {
+        return val.key !== id ;
+      });
+
+      return newNotes ;
+    })
+  }
+
   return (
     <div>
       <Header />
-      {notes.map(createNote)}
+      <CreateArea onAdd={updateNotes}/>
+      {notes.map((note) => {
+        return(
+          <Note key={note.key} id={note.key} title={note.title} content={note.content} onClick={deleteNote}/>
+        );
+        })
+      }
       <Footer />
     </div>
   );
